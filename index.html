@@ -1,0 +1,328 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Enthusiast | Prajwal Arun Kumar</title>
+    <link rel="stylesheet" href="dist/styles.css">
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+</head>
+<body class="text-gray-800">
+    <!-- Navigation -->
+    <nav class="navbar fixed-top bg-gray-800 text-white p-4 fixed top-0 w-full z-10">
+        <div class="container mx-auto flex justify-between items-center">
+            <!-- Add your name in Italian-style font manually here -->
+            <div class="text-2xl font-bold" style="font-family: 'Dancing Script', cursive;">
+                <!-- Replace with your name -->
+                Prajwal Arun Kumar
+            </div>
+            <ul class="flex space-x-6">
+                <li><a href="#about" class="hover:underline">About</a></li>
+                <li><a href="#experience" class="hover:underline">Experience</a></li>
+                <li><a href="#certifications" class="hover:underline">Certifications</a></li>
+                <li><a href="#projects" class="hover:underline">Projects</a></li>
+                <li><a href="https://drive.google.com/file/d/1MjpH9hvP9OR2hNu93hyJUyYrRBURl9ua/view?usp=drive_link" class="hover:underline">Resume</a></li>
+                <li><a href="mailto:prajwalarunkumar29@gmail.com" class="hover:underline">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="hero" class="h-screen flex items-center justify-center text-white bg-gray-800">
+        <div class="container mx-auto text-center">
+            <img src="images/Profilephoto.jpg" alt="Your Photo" class="w-32 h-32 rounded-full mx-auto mb-6">
+            <h1 class="text-4xl md:text-5xl font-bold mb-4">Hello, I'm Prajwal Arun Kumar</h1>
+            <p class="text-lg md:text-xl mb-6">Data Enthusiast | 3+ Years Experience</p>
+            <!-- Update the href with your Gmail address -->
+            <a href="mailto:prajwalarunkumar29@gmail.com" class="bg-white text-gray-800 px-6 py-3 rounded-full font-semibold hover:bg-gray-200">Get in Touch</a>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold mb-8 text-red-600 text-center">ABOUT</h2>
+            <p class="text-lg mb-4">
+                Highly-motivated individual who desires to take on new challenges. 
+                Strong work ethics, adaptability and exceptional interpersonal skills. 
+                Adept at working effectively unsupervised and quickly mastering 
+                new skills. 
+
+                
+                <!-- Add your personal description here -->
+            </p>
+            <p class="text-lg mb-4">My fascination with data began early in my career when I realized its power to uncover hidden patterns and drive meaningful decisions. I was captivated by how raw numbers could tell compelling stories, whether it was optimizing user interactions or predicting trends through analytics. This curiosity led me to dive deep into the world of data, where I transform complex datasets into intuitive, impactful insights that empower users and businesses alike.</p>
+            </div>
+    </section>
+
+
+    <!-- Skills Section -->
+    <section id="about" class="py-16 bg-gray-100">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold mb-8 text-red-600 text-center">SKILLS</h2>
+                <!-- Add your technologies here -->
+                <p><strong>Programming Languages:</strong> Python, Java, Javascript, C/C++</p>
+                <p><strong>Data Science and Big Data technologies:</strong> Pandas, NumPy, Matplotlib, Hadoop, Apache Hive, Kafka, Spark</p>
+                <p><strong>AI/ML Frameworks :</strong> TensorFlow, PyTorch, Scikit-learn, Keras</p>
+                <p><strong>Miscellaneous Technologies/Tools:</strong> AWS, Azure, PowerBI, TeamDynamix, Service Now, Agile Methodologies</p>
+                <p><strong>Leadership and Communication:</strong> Team Coordination, Project Management, Technical Documentation</p>
+                
+    
+        </div>
+    </section>    
+ <!-- Education Section -->
+ <section id="education" class="py-16 bg-white">
+    <div class="container mx-auto px-4">
+        <h2 class="text-3xl font-bold mb-8 text-red-600 text-center">EDUCATION</h2>
+        <!-- Education Entry 1 -->
+        <div class="mb-6 relative pl-8">
+            <div class="absolute left-0 top-0 h-full w-1 bg-green-500"></div>
+            <h3 class="text-xl font-semibold">Masters in Computer Science</h3>
+            <p class="text-sm text-gray-500">University of South Dakota | 2024 - 2026</p>
+            <p class="mt-2">Data Mining, Distributed Systems, Computer Vision, AI/ML, Deep Learning</p>
+        </div>
+        <!-- Education Entry 2 -->
+        <div class="mb-6 relative pl-8">
+            <div class="absolute left-0 top-0 h-full w-1 bg-green-500"></div>
+            <h3 class="text-xl font-semibold">Bachelors in Computer Science</h3>
+            <p class="text-sm text-gray-500">Visvesvaraya Technological University | 2017 - 2021</p>
+            <p class="mt-2">Data structures and Algorithms, Python Programming, Machine Learning, Operating Systems and Design, Cloud Computing</p>
+        </div>
+        <!-- Add more entries as needed -->
+    </div>
+</section>
+
+    <!-- Experience Section -->
+    <section id="experience" class="py-16 bg-gray-100">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold mb-8 text-red-600 text-center">EXPERIENCE</h2>
+            <!-- Experience 1 -->
+            <div class="mb-6">
+                <h3 class="text-xl font-semibold text-left w-full focus:outline-none">
+                    University of South Dakota, Office of Accessibility
+                </h3>
+                <div id="exp3" class="experience-details mt-2">
+                    <p class="text-sm text-gray-500">December 2024 - Present</p>
+                    <!-- Add your role and experience points here -->
+                    <p>Digital Accessibility Assistant</p>
+                    <ul class="list-disc pl-6">
+                        <li>Assisted in reviewing, testing, evaluating, and remedying digital content to meet accessibility standards. </li>
+                        <li> Provided technical support and guidance to students, faculty, and staff on creating accessible materials.</li>
+                        <li>Conducted software reviews for accessibility compliance using manual and automated methods and provided feedback to vendors for improving accessibility features. </li>
+                        <li>Reported and documented tasks using TeamDynamix and Power BI for data analysis. </li>      
+                    </ul>
+                </div>
+            </div>
+            <!-- Experience 2 -->
+            <div class="mb-6">
+                <h3 class="text-xl font-semibold text-left w-full focus:outline-none">
+                    ITC Infotech India Ltd, Bangalore, India
+                </h3>
+                <div id="exp1" class="experience-details mt-2">
+                    <p class="text-sm text-gray-500">January 2022 - August 2024</p>
+                    <!-- Add your role and experience points here -->
+                    <p>Associate IT Consultant</p>
+                    <ul class="list-disc pl-6">
+                        <li>Member of prestigious Client Engineering Team and drive client 
+                            engagements focusing on technology patterns to enhance 
+                            repeatability and delight clients. </li>
+                        <li>Actively engaged with businesses in designing solutions which 
+                            will deliver real business value leveraging cutting edge AI & 
+                            related technologies.</li>
+                        <li>Identified, analyzed and interpreted trends or patterns in complex 
+                            data sets. </li>
+                        <li>Identified, measured and recommended improvement strategies 
+                            for KPIs across business areas. </li>   
+                        <li>Build data models, data flows to ensure data moved efficiently 
+                            between the systems. </li>  
+                        <li>Automated routine tasks using Python scripts, increasing team 
+                            productivity and reducing manual errors. </li>   
+                        <li>Developed intricate algorithms based on deep-dive statistical 
+                            analysis and predictive data modeling. </li>  
+                        <li>Ability to derive data models to outline areas of opportunities and 
+                            suggest solutions to solve problems around processes, efficiency, 
+                            operational management and governance. </li>  
+                        <li>Managed cloud infrastructure resources on AWS for secure 
+                            storage and easy access of large datasets used in analyses. </li>
+                        <li>Spearheaded a critical Data Migration Project to ensure smooth 
+                            execution of complex tasks. </li>                
+                    </ul>
+                </div>
+            </div>
+            <!-- Experience 3 -->
+            <div class="mb-6">
+                <h3 class="text-xl font-semibold text-left w-full focus:outline-none">
+                    Rakuten India Enterprise Private Ltd, Bangalore, India
+                </h3>
+                <div id="exp2" class="experience-details mt-2">
+                    <p class="text-sm text-gray-500">August 2020 - February 2021</p>
+                    <!-- Add your role and experience points here -->
+                    <p>Technical Intern</p>
+                    <ul class="list-disc pl-6">
+                        <li>Enhanced software performance by conducting thorough 
+                            debugging and code reviews. </li>
+                        <li> Collaborated with cross-functional teams to ensure timely project 
+                            completion and seamless communication.</li>
+                        <li>Implemented new features for applications, resulting in improved 
+                            user experience. </li>
+                        <li>Enhanced software functionality by debugging and optimizing 
+                            existing code. </li>   
+                        <li>Contributed to the successful launch of a new product by 
+                            providing key technical support during development stages. </li>     
+                    </ul>
+                </div>
+            </div>
+            <!-- Experience 3 -->
+            
+        </div>
+    </section>
+
+    <!-- Certifications Section -->
+    <section id="certifications" class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold mb-8 text-red-600 text-center">CERTIFICATIONS</h2>
+            <!-- Certification 1 -->
+            <div class="flex flex-col md:flex-row items-center mb-8">
+                <img src="images/aws.jpg" alt="Certification 1" class="w-48 h-38 object-cover rounded-md mb-4 md:mb-0 md:mr-6">
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">AWS Certified Solutions Architect – Associate</h3>
+                    <!-- Add certification details here -->
+                    <!-- <p>AWS </p>
+                    <a href="images/cert1.pdf" class="bg-gray-200 text-gray-800 px-4 py-2 rounded hover:bg-gray-300 mt-2 inline-block">View Certificate</a> -->
+                </div>
+            </div>
+            <!-- Certification 2 -->
+            <div class="flex flex-col md:flex-row items-center mb-8">
+                <img src="images/ibm.jpg" alt="Certification 2" class="w-48 h-38 object-cover rounded-md mb-4 md:mb-0 md:mr-6">
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">IBM Data Science Professional Certificate</h3>
+                    <!-- Add certification details here -->
+                    
+                </div>
+            </div>
+            <!-- Certification 3 -->
+            <div class="flex flex-col md:flex-row items-center mb-8">
+                <img src="images/paloalto.jpg" alt="Certification 1" class="w-48 h-38 object-cover rounded-md mb-4 md:mb-0 md:mr-6">
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">Palo Alto Networks CyberSecurity Professional Certificate
+                    </h3>
+                    <!-- Add certification details here -->
+                    
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="projects" class="py-16 bg-gray-100">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold mb-8 text-red-600 text-center">PROJECTS</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Project 1 -->
+                <div class="project-card relative h-64 rounded-lg overflow-hidden bg-cover bg-center" style="background-image: url('images/Pneumonia\ Detection.jpg');">
+                    <div class="overlay absolute inset-0 bg-black bg-opacity-60 flex flex-col justify-center items-center text-white opacity-0 hover:opacity-100 transition-opacity duration-300">
+                        <h3 class="text-xl font-semibold mb-2">Pneumonia Detection using Deep learning </h3>
+                        <ul class="list-disc pl-6">
+                            <li> Developed an automated pneumonia detection system using chest X-ray images and deep learning techniques. </li>
+                            <li> Implemented a CNN model with Transfer Learning for image segmentation and classification.</li>
+                            <li> Demonstrated the potential of AI-driven diagnostics to assist healthcare professionals in early pneumonia detection. </li>
+                             
+                        </ul>
+                        <!-- <a href="[https://github.com/prajwal2k/Pneumonia-Detection]" class="bg-white text-gray-800 px-4 py-2 rounded hover:bg-gray-200">View Project</a> -->
+                    </div>
+                </div>
+                <!-- Project 2 -->
+                <div class="project-card relative h-64 rounded-lg overflow-hidden bg-cover bg-center" style="background-image: url('images/Object\ Detection.jpg');">
+                    <div class="overlay absolute inset-0 bg-black bg-opacity-60 flex flex-col justify-center items-center text-white opacity-0 hover:opacity-100 transition-opacity duration-300">
+                        <h3 class="text-xl font-semibold mb-2">Object Detection using Python-OpenCV</h3>
+                        <ul class="list-disc pl-6">
+                            <li> Applied computer vision algorithms for feature extraction and object tracking, enhancing accuracy. </li>
+                            <li> Implemented real-time video processing for efficient frame-by-frame object detection in live streams.</li>
+                            
+                             
+                        </ul>
+                        <!-- <a href="[Your GitHub Link]" class="bg-white text-gray-800 px-4 py-2 rounded hover:bg-gray-200">View Project</a> -->
+                    </div>
+                </div>
+                <!-- Project 3 -->
+                <div class="project-card relative h-64 rounded-lg overflow-hidden bg-cover bg-center" style="background-image: url('images/chatbot\ ai.jpg');">
+                    <div class="overlay absolute inset-0 bg-black bg-opacity-60 flex flex-col justify-center items-center text-white opacity-0 hover:opacity-100 transition-opacity duration-300">
+                        <h3 class="text-xl font-semibold mb-2">Personalized AI Chatbot using RL</h3>
+                        <ul class="list-disc pl-6">
+                            <li> Developed an AI chatbot using Python and TensorFlow, enabling natural language understanding and response
+                                generation with high accuracy for user queries. </li>
+                            <li> Trained the chatbot model with NLP tools like spaCy, optimizing it for scalable deployment on a cloud platform
+                                with secure, inclusive user interactions.</li>
+                            
+                             
+                        </ul>
+                        <!-- <a href="[Your GitHub Link]" class="bg-white text-gray-800 px-4 py-2 rounded hover:bg-gray-200">View Project</a> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-16 bg-white">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="text-3xl font-bold mb-4">SAY HELLO, I AM LOOKING FOR A CHANGE!</h2>
+            <!-- Update the href with your Gmail address -->
+            <a href="mailto:prajwalarunkumar29@gmail.com" class="bg-red-600 text-white px-6 py-3 rounded-full font-semibold hover:bg-red-700 mb-6 inline-block">Get in Touch</a>
+            <div class="flex justify-center space-x-6">
+                <!-- Update the href with your social media links -->
+                <a href="https://github.com/prajwal2k" class="text-red-600 hover:underline">GitHub</a>
+                <!-- <a href="[Your Twitter Link]" class="text-red-600 hover:underline">Twitter</a> -->
+                <a href="https://www.linkedin.com/in/prajwal-arun-kumar-745503176" class="text-red-600 hover:underline">LinkedIn</a>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-gray-800 text-white py-6">
+        <div class="container mx-auto text-center">
+            <p>© 2025 Prajwal Arun Kumar. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

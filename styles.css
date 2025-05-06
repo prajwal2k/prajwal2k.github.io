@@ -1,0 +1,29 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+    font-family: 'Inter', sans-serif;
+    scroll-behavior: smooth;
+}
+
+nav ul li a {
+    transition: all 0.3s ease;
+}
+
+nav ul li a:hover {
+    color: #E5E7EB;
+}
+
+.experience-details {
+    transition: all 0.3s ease;
+}
+
+.project-card {
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.overlay {
+    transition: opacity 0.3s ease;
+}
