@@ -1,328 +1,576 @@
-<script type="text/javascript">
-        var gk_isXlsx = false;
-        var gk_xlsxFileLookup = {};
-        var gk_fileData = {};
-        function filledCell(cell) {
-          return cell !== '' && cell != null;
-        }
-        function loadFileData(filename) {
-        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
-            try {
-                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
-                var firstSheetName = workbook.SheetNames[0];
-                var worksheet = workbook.Sheets[firstSheetName];
-
-                // Convert sheet to JSON to filter blank rows
-                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
-                // Filter out blank rows (rows where all cells are empty, null, or undefined)
-                var filteredData = jsonData.filter(row => row.some(filledCell));
-
-                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
-                var headerRowIndex = filteredData.findIndex((row, index) =>
-                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
-                );
-                // Fallback
-                if (headerRowIndex === -1 || headerRowIndex > 25) {
-                  headerRowIndex = 0;
-                }
-
-                // Convert filtered JSON back to CSV
-                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
-                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
-                return csv;
-            } catch (e) {
-                console.error(e);
-                return "";
-            }
-        }
-        return gk_fileData[filename] || "";
-        }
-        </script><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data Enthusiast | Prajwal Arun Kumar</title>
-    <link rel="stylesheet" href="dist/styles.css">
-    <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prajwal Arun Kumar — Data Engineer · Pipelines, Cloud &amp; Applied AI</title>
+<meta name="description" content="Prajwal Arun Kumar — Data Engineer with 3+ years building ETL/ELT pipelines, distributed data processing, and cloud data infrastructure across AWS and Azure, with applied AI fluency in LangChain and RAG.">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Prajwal Arun Kumar — Data Engineer · Pipelines, Cloud & Applied AI">
+<meta property="og:description" content="Data Engineer with 3+ years building ETL/ELT pipelines, distributed data processing, and cloud data infrastructure across AWS and Azure, with applied AI fluency in LangChain and RAG.">
+<meta property="og:image" content="https://prajwal2k.github.io/og-image.png">
+<meta property="og:url" content="https://prajwal2k.github.io/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Prajwal Arun Kumar — Data Engineer · Pipelines, Cloud & Applied AI">
+<meta name="twitter:description" content="Data Engineer with 3+ years building ETL/ELT pipelines, distributed data processing, and cloud data infrastructure across AWS and Azure, with applied AI fluency in LangChain and RAG.">
+<meta name="twitter:image" content="https://prajwal2k.github.io/og-image.png">
+
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230B0F14'/%3E%3Crect x='2' y='2' width='28' height='28' rx='4' fill='none' stroke='%23D9A441' stroke-width='1.5'/%3E%3Ctext x='16' y='21' font-family='monospace' font-size='13' font-weight='700' fill='%23D9A441' text-anchor='middle'%3EPK%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
 </head>
-<body class="text-gray-800">
-    <!-- Navigation -->
-    <nav class="navbar fixed-top bg-gray-800 text-white p-4 fixed top-0 w-full z-10">
-        <div class="container mx-auto flex justify-between items-center">
-            <!-- Add your name in Italian-style font manually here -->
-            <div class="text-2xl font-bold" style="font-family: 'Dancing Script', cursive;">
-                <!-- Replace with your name -->
-                Prajwal Arun Kumar
-            </div>
-            <ul class="flex space-x-6">
-                <li><a href="#about" class="hover:underline">About</a></li>
-                <li><a href="#experience" class="hover:underline">Experience</a></li>
-                <li><a href="#certifications" class="hover:underline">Certifications</a></li>
-                <li><a href="#projects" class="hover:underline">Projects</a></li>
-                <li><a href="https://drive.google.com/file/d/1MjpH9hvP9OR2hNu93hyJUyYrRBURl9ua/view?usp=drive_link" class="hover:underline">Resume</a></li>
-                <li><a href="mailto:prajwalarunkumar29@gmail.com" class="hover:underline">Contact</a></li>
-            </ul>
-        </div>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="nav" id="top">
+  <div class="nav-inner">
+    <a href="#top" class="mark" aria-label="Prajwal Arun Kumar, home">
+      <span class="mark-box">PAK</span>
+      <span class="mark-text">Prajwal Arun Kumar</span>
+    </a>
+    <nav class="nav-links" aria-label="Primary">
+      <a href="#about">about</a>
+      <a href="#stack">stack</a>
+      <a href="#experience">experience</a>
+      <a href="#projects">projects</a>
+      <a href="#certs">certs</a>
+      <a href="#contact">contact</a>
     </nav>
-
-    <!-- Hero Section -->
-    <section id="hero" class="h-screen flex items-center justify-center text-white bg-gray-800">
-        <div class="container mx-auto text-center">
-            <img src="images/Profilephoto.jpg" alt="Your Photo" class="w-32 h-32 rounded-full mx-auto mb-6">
-            <h1 class="text-4xl md:text-5xl font-bold mb-4">Hello, I'm Prajwal Arun Kumar</h1>
-            <p class="text-lg md:text-xl mb-6">Data Enthusiast | 3+ Years Experience</p>
-            <!-- Update the href with your Gmail address -->
-            <a href="mailto:prajwalarunkumar29@gmail.com" class="bg-white text-gray-800 px-6 py-3 rounded-full font-semibold hover:bg-gray-200">Get in Touch</a>
-        </div>
-    </section>
-
-    <!-- About Section -->
-    <section id="about" class="py-16 bg-white">
-        <div class="container mx-auto px-4">
-            <h2 class="text-3xl font-bold mb-8 text-red-600 text-center">ABOUT</h2>
-            <p class="text-lg mb-4">
-                Highly-motivated individual who desires to take on new challenges. 
-                Strong work ethics, adaptability and exceptional interpersonal skills. 
-                Adept at working effectively unsupervised and quickly mastering 
-                new skills. 
-
-                
-                <!-- Add your personal description here -->
-            </p>
-            <p class="text-lg mb-4">My fascination with data began early in my career when I realized its power to uncover hidden patterns and drive meaningful decisions. I was captivated by how raw numbers could tell compelling stories, whether it was optimizing user interactions or predicting trends through analytics. This curiosity led me to dive deep into the world of data, where I transform complex datasets into intuitive, impactful insights that empower users and businesses alike.</p>
-            </div>
-    </section>
-
-
-    <!-- Skills Section -->
-    <section id="about" class="py-16 bg-gray-100">
-        <div class="container mx-auto px-4">
-            <h2 class="text-3xl font-bold mb-8 text-red-600 text-center">SKILLS</h2>
-                <!-- Add your technologies here -->
-                <p><strong>Programming Languages:</strong> Python, Java, Javascript, C/C++</p>
-                <p><strong>Data Science and Big Data technologies:</strong> Pandas, NumPy, Matplotlib, Hadoop, Apache Hive, Kafka, Spark</p>
-                <p><strong>AI/ML Frameworks :</strong> TensorFlow, PyTorch, Scikit-learn, Keras</p>
-                <p><strong>Miscellaneous Technologies/Tools:</strong> AWS, Azure, PowerBI, TeamDynamix, Service Now, Agile Methodologies</p>
-                <p><strong>Leadership and Communication:</strong> Team Coordination, Project Management, Technical Documentation</p>
-                
-    
-        </div>
-    </section>    
- <!-- Education Section -->
- <section id="education" class="py-16 bg-white">
-    <div class="container mx-auto px-4">
-        <h2 class="text-3xl font-bold mb-8 text-red-600 text-center">EDUCATION</h2>
-        <!-- Education Entry 1 -->
-        <div class="mb-6 relative pl-8">
-            <div class="absolute left-0 top-0 h-full w-1 bg-green-500"></div>
-            <h3 class="text-xl font-semibold">Masters in Computer Science</h3>
-            <p class="text-sm text-gray-500">University of South Dakota | 2024 - 2026</p>
-            <p class="mt-2">Data Mining, Distributed Systems, Computer Vision, AI/ML, Deep Learning</p>
-        </div>
-        <!-- Education Entry 2 -->
-        <div class="mb-6 relative pl-8">
-            <div class="absolute left-0 top-0 h-full w-1 bg-green-500"></div>
-            <h3 class="text-xl font-semibold">Bachelors in Computer Science</h3>
-            <p class="text-sm text-gray-500">Visvesvaraya Technological University | 2017 - 2021</p>
-            <p class="mt-2">Data structures and Algorithms, Python Programming, Machine Learning, Operating Systems and Design, Cloud Computing</p>
-        </div>
-        <!-- Add more entries as needed -->
+    <div class="nav-actions">
+      <a class="btn btn-ghost nav-resume" href="https://drive.google.com/file/d/1u8V4PVaUVQ8u_AQN1yXNKOIYkQsF6Bd3/view?usp=drive_link" target="_blank" rel="noopener">resume</a>
+      <a class="btn btn-ghost nav-cta" href="mailto:prajwalarunkumar369@gmail.com">get in touch</a>
     </div>
-</section>
+  </div>
+</header>
 
-    <!-- Experience Section -->
-    <section id="experience" class="py-16 bg-gray-100">
-        <div class="container mx-auto px-4">
-            <h2 class="text-3xl font-bold mb-8 text-red-600 text-center">EXPERIENCE</h2>
-            <!-- Experience 1 -->
-            <div class="mb-6">
-                <h3 class="text-xl font-semibold text-left w-full focus:outline-none">
-                    University of South Dakota, Office of Accessibility
-                </h3>
-                <div id="exp3" class="experience-details mt-2">
-                    <p class="text-sm text-gray-500">December 2024 - Present</p>
-                    <!-- Add your role and experience points here -->
-                    <p>Digital Accessibility Assistant</p>
-                    <ul class="list-disc pl-6">
-                        <li>Assisted in reviewing, testing, evaluating, and remedying digital content to meet accessibility standards. </li>
-                        <li> Provided technical support and guidance to students, faculty, and staff on creating accessible materials.</li>
-                        <li>Conducted software reviews for accessibility compliance using manual and automated methods and provided feedback to vendors for improving accessibility features. </li>
-                        <li>Reported and documented tasks using TeamDynamix and Power BI for data analysis. </li>      
-                    </ul>
-                </div>
-            </div>
-            <!-- Experience 2 -->
-            <div class="mb-6">
-                <h3 class="text-xl font-semibold text-left w-full focus:outline-none">
-                    ITC Infotech India Ltd, Bangalore, India
-                </h3>
-                <div id="exp1" class="experience-details mt-2">
-                    <p class="text-sm text-gray-500">January 2022 - August 2024</p>
-                    <!-- Add your role and experience points here -->
-                    <p>Associate IT Consultant</p>
-                    <ul class="list-disc pl-6">
-                        <li>Member of prestigious Client Engineering Team and drive client 
-                            engagements focusing on technology patterns to enhance 
-                            repeatability and delight clients. </li>
-                        <li>Actively engaged with businesses in designing solutions which 
-                            will deliver real business value leveraging cutting edge AI & 
-                            related technologies.</li>
-                        <li>Identified, analyzed and interpreted trends or patterns in complex 
-                            data sets. </li>
-                        <li>Identified, measured and recommended improvement strategies 
-                            for KPIs across business areas. </li>   
-                        <li>Build data models, data flows to ensure data moved efficiently 
-                            between the systems. </li>  
-                        <li>Automated routine tasks using Python scripts, increasing team 
-                            productivity and reducing manual errors. </li>   
-                        <li>Developed intricate algorithms based on deep-dive statistical 
-                            analysis and predictive data modeling. </li>  
-                        <li>Ability to derive data models to outline areas of opportunities and 
-                            suggest solutions to solve problems around processes, efficiency, 
-                            operational management and governance. </li>  
-                        <li>Managed cloud infrastructure resources on AWS for secure 
-                            storage and easy access of large datasets used in analyses. </li>
-                        <li>Spearheaded a critical Data Migration Project to ensure smooth 
-                            execution of complex tasks. </li>                
-                    </ul>
-                </div>
-            </div>
-            <!-- Experience 3 -->
-            <div class="mb-6">
-                <h3 class="text-xl font-semibold text-left w-full focus:outline-none">
-                    Rakuten India Enterprise Private Ltd, Bangalore, India
-                </h3>
-                <div id="exp2" class="experience-details mt-2">
-                    <p class="text-sm text-gray-500">August 2020 - February 2021</p>
-                    <!-- Add your role and experience points here -->
-                    <p>Technical Intern</p>
-                    <ul class="list-disc pl-6">
-                        <li>Enhanced software performance by conducting thorough 
-                            debugging and code reviews. </li>
-                        <li> Collaborated with cross-functional teams to ensure timely project 
-                            completion and seamless communication.</li>
-                        <li>Implemented new features for applications, resulting in improved 
-                            user experience. </li>
-                        <li>Enhanced software functionality by debugging and optimizing 
-                            existing code. </li>   
-                        <li>Contributed to the successful launch of a new product by 
-                            providing key technical support during development stages. </li>     
-                    </ul>
-                </div>
-            </div>
-            <!-- Experience 3 -->
-            
+<main id="main">
+
+  <!-- ============ HERO ============ -->
+  <section class="hero" id="hero">
+    <div class="hero-inner">
+      <p class="eyebrow"><span class="dot dot-live"></span>open to data engineering roles</p>
+
+      <h1 class="hero-title">
+        I build the pipelines that turn <span class="accent-amber">raw data</span> into
+        <span class="accent-teal">answers worth trusting.</span>
+      </h1>
+
+      <p class="hero-sub">
+        Data Engineer with 3+ years designing ETL/ELT pipelines, distributed processing, and
+        cloud data infrastructure across AWS and Azure — from Spark jobs and dbt models to
+        LLM-powered tools that sit on top of the warehouse.
+      </p>
+
+      <div class="hero-cta">
+        <a href="#projects" class="btn btn-primary">See the work →</a>
+        <a href="https://drive.google.com/file/d/1u8V4PVaUVQ8u_AQN1yXNKOIYkQsF6Bd3/view?usp=drive_link" class="btn btn-ghost" target="_blank" rel="noopener">View resume</a>
+      </div>
+
+      <div class="hero-stats">
+        <div class="stat">
+          <span class="stat-num">3<span class="accent-amber">+</span></span>
+          <span class="stat-label">years in data engineering</span>
         </div>
-    </section>
-
-    <!-- Certifications Section -->
-    <section id="certifications" class="py-16 bg-white">
-        <div class="container mx-auto px-4">
-            <h2 class="text-3xl font-bold mb-8 text-red-600 text-center">CERTIFICATIONS</h2>
-            <!-- Certification 1 -->
-            <div class="flex flex-col md:flex-row items-center mb-8">
-                <img src="images/aws.jpg" alt="Certification 1" class="w-48 h-38 object-cover rounded-md mb-4 md:mb-0 md:mr-6">
-                <div>
-                    <h3 class="text-xl font-semibold mb-2">AWS Certified Solutions Architect – Associate</h3>
-                    <!-- Add certification details here -->
-                    <!-- <p>AWS </p>
-                    <a href="images/cert1.pdf" class="bg-gray-200 text-gray-800 px-4 py-2 rounded hover:bg-gray-300 mt-2 inline-block">View Certificate</a> -->
-                </div>
-            </div>
-            <!-- Certification 2 -->
-            <div class="flex flex-col md:flex-row items-center mb-8">
-                <img src="images/ibm.jpg" alt="Certification 2" class="w-48 h-38 object-cover rounded-md mb-4 md:mb-0 md:mr-6">
-                <div>
-                    <h3 class="text-xl font-semibold mb-2">IBM Data Science Professional Certificate</h3>
-                    <!-- Add certification details here -->
-                    
-                </div>
-            </div>
-            <!-- Certification 3 -->
-            <div class="flex flex-col md:flex-row items-center mb-8">
-                <img src="images/paloalto.jpg" alt="Certification 1" class="w-48 h-38 object-cover rounded-md mb-4 md:mb-0 md:mr-6">
-                <div>
-                    <h3 class="text-xl font-semibold mb-2">Palo Alto Networks CyberSecurity Professional Certificate
-                    </h3>
-                    <!-- Add certification details here -->
-                    
-                </div>
-            </div>
+        <div class="stat">
+          <span class="stat-num">60<span class="accent-amber">%</span></span>
+          <span class="stat-label">query latency cut on a lakehouse pipeline</span>
         </div>
-    </section>
+        <div class="stat">
+          <span class="stat-num">80<span class="accent-amber">%</span></span>
+          <span class="stat-label">faster ad-hoc requests via an NL→SQL tool</span>
+        </div>
+      </div>
+    </div>
 
-    <section id="projects" class="py-16 bg-gray-100">
-        <div class="container mx-auto px-4">
-            <h2 class="text-3xl font-bold mb-8 text-red-600 text-center">PROJECTS</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Project 1 -->
-                <div class="project-card relative h-64 rounded-lg overflow-hidden bg-cover bg-center" style="background-image: url('images/Pneumonia\ Detection.jpg');">
-                    <div class="overlay absolute inset-0 bg-black bg-opacity-60 flex flex-col justify-center items-center text-white opacity-0 hover:opacity-100 transition-opacity duration-300">
-                        <h3 class="text-xl font-semibold mb-2">Pneumonia Detection using Deep learning </h3>
-                        <ul class="list-disc pl-6">
-                            <li> Developed an automated pneumonia detection system using chest X-ray images and deep learning techniques. </li>
-                            <li> Implemented a CNN model with Transfer Learning for image segmentation and classification.</li>
-                            <li> Demonstrated the potential of AI-driven diagnostics to assist healthcare professionals in early pneumonia detection. </li>
-                             
-                        </ul>
-                        <!-- <a href="[https://github.com/prajwal2k/Pneumonia-Detection]" class="bg-white text-gray-800 px-4 py-2 rounded hover:bg-gray-200">View Project</a> -->
-                    </div>
-                </div>
-                <!-- Project 2 -->
-                <div class="project-card relative h-64 rounded-lg overflow-hidden bg-cover bg-center" style="background-image: url('images/Object\ Detection.jpg');">
-                    <div class="overlay absolute inset-0 bg-black bg-opacity-60 flex flex-col justify-center items-center text-white opacity-0 hover:opacity-100 transition-opacity duration-300">
-                        <h3 class="text-xl font-semibold mb-2">Object Detection using Python-OpenCV</h3>
-                        <ul class="list-disc pl-6">
-                            <li> Applied computer vision algorithms for feature extraction and object tracking, enhancing accuracy. </li>
-                            <li> Implemented real-time video processing for efficient frame-by-frame object detection in live streams.</li>
-                            
-                             
-                        </ul>
-                        <!-- <a href="[Your GitHub Link]" class="bg-white text-gray-800 px-4 py-2 rounded hover:bg-gray-200">View Project</a> -->
-                    </div>
-                </div>
-                <!-- Project 3 -->
-                <div class="project-card relative h-64 rounded-lg overflow-hidden bg-cover bg-center" style="background-image: url('images/chatbot\ ai.jpg');">
-                    <div class="overlay absolute inset-0 bg-black bg-opacity-60 flex flex-col justify-center items-center text-white opacity-0 hover:opacity-100 transition-opacity duration-300">
-                        <h3 class="text-xl font-semibold mb-2">Personalized AI Chatbot using RL</h3>
-                        <ul class="list-disc pl-6">
-                            <li> Developed an AI chatbot using Python and TensorFlow, enabling natural language understanding and response
-                                generation with high accuracy for user queries. </li>
-                            <li> Trained the chatbot model with NLP tools like spaCy, optimizing it for scalable deployment on a cloud platform
-                                with secure, inclusive user interactions.</li>
-                            
-                             
-                        </ul>
-                        <!-- <a href="[Your GitHub Link]" class="bg-white text-gray-800 px-4 py-2 rounded hover:bg-gray-200">View Project</a> -->
-                    </div>
-                </div>
+    <!-- signature element: animated DAG of the actual stack -->
+    <div class="dag" role="img" aria-label="Diagram of a typical pipeline: raw sources flow through Spark and PySpark, then dbt models, into a cloud warehouse, then out to BI dashboards and an LLM query layer.">
+      <div class="dag-track">
+
+        <div class="dag-node" style="--i:0">
+          <span class="dag-node-label">raw sources</span>
+          <span class="dag-node-sub">S3 · Kafka · APIs</span>
+        </div>
+        <div class="dag-edge"><span></span></div>
+
+        <div class="dag-node" style="--i:1">
+          <span class="dag-node-label">spark / pyspark</span>
+          <span class="dag-node-sub">batch + streaming</span>
+        </div>
+        <div class="dag-edge"><span></span></div>
+
+        <div class="dag-node dag-node-accent" style="--i:2">
+          <span class="dag-node-label">dbt</span>
+          <span class="dag-node-sub">staging → mart</span>
+        </div>
+        <div class="dag-edge"><span></span></div>
+
+        <div class="dag-node" style="--i:3">
+          <span class="dag-node-label">warehouse</span>
+          <span class="dag-node-sub">Snowflake · Redshift</span>
+        </div>
+        <div class="dag-edge"><span></span></div>
+
+        <div class="dag-node dag-node-accent-teal" style="--i:4">
+          <span class="dag-node-label">bi + llm layer</span>
+          <span class="dag-node-sub">Power BI · LangChain</span>
+        </div>
+
+      </div>
+      <p class="dag-caption">orchestrated with Airflow · monitored end to end</p>
+    </div>
+  </section>
+
+  <!-- ============ ABOUT ============ -->
+  <section class="section" id="about">
+    <p class="task-id"><span class="dot dot-static"></span>task_id: about_me</p>
+    <div class="section-grid">
+      <h2 class="section-title">Pipelines other teams<br>can actually build on.</h2>
+      <div class="section-body">
+        <p>
+          I'm a data engineer who cares less about the tool of the week and more about whether
+          the numbers downstream can be trusted. Most of my work lives in the unglamorous middle
+          of the data lifecycle — ingestion, transformation, storage, and the reporting layer
+          people actually depend on — built to survive schema drift, late data, and the 2am page.
+        </p>
+        <p>
+          At the <strong>University of South Dakota</strong>, I automate extraction and
+          transformation across LMS, student, and audit data, and ship the Power BI dashboards
+          leadership uses to make calls — cutting report prep from five days to two hours. Before
+          that, at <strong>ITC Infotech</strong>, I built and monitored ETL pipelines across
+          enterprise source systems, wired Kafka into backend data flows, and supported a
+          migration into Azure Databricks for large-scale Spark processing.
+        </p>
+        <p>
+          Alongside the core stack, I've been building applied AI into that same world — RAG
+          pipelines and LangChain tools that let non-technical users query a warehouse in plain
+          English. I'm not trying to be an ML engineer; I want the LLM layer to be one more
+          reliable component sitting on top of pipelines I already trust.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ STACK ============ -->
+  <section class="section" id="stack">
+    <p class="task-id"><span class="dot dot-static"></span>task_id: tech_stack</p>
+    <h2 class="section-title">Tools I reach for.</h2>
+    <p class="section-lede">Heaviest on pipeline design, distributed processing, and cloud data infrastructure — with a working AI layer on top.</p>
+
+    <div class="stack-grid">
+      <div class="stack-group">
+        <h3>languages</h3>
+        <div class="tags">
+          <span>Python</span><span>SQL</span><span>Java</span><span>Scala (basic)</span><span>JavaScript</span><span>TypeScript</span><span>R</span>
+        </div>
+      </div>
+      <div class="stack-group">
+        <h3>data engineering</h3>
+        <div class="tags">
+          <span>ETL / ELT Design</span><span>dbt</span><span>Apache Spark</span><span>PySpark</span><span>Delta Lake</span><span>Unity Catalog</span><span>Databricks Lakeflow</span><span>Apache Airflow</span><span>Apache Kafka</span><span>Data Warehousing</span><span>Data Modeling</span><span>Batch &amp; Streaming</span>
+        </div>
+      </div>
+      <div class="stack-group">
+        <h3>cloud &amp; infra</h3>
+        <div class="tags">
+          <span>AWS (S3, Redshift, Athena, EC2, Lambda)</span><span>Azure (Data Factory, Synapse, ADLS, Databricks)</span><span>Snowflake</span><span>GCP BigQuery</span><span>Terraform</span><span>Hadoop</span><span>Docker</span><span>CI/CD</span><span>Git</span>
+        </div>
+      </div>
+      <div class="stack-group">
+        <h3>databases</h3>
+        <div class="tags">
+          <span>PostgreSQL</span><span>MySQL</span><span>MongoDB</span><span>Redshift</span><span>Snowflake</span><span>Lakehouse Architectures</span>
+        </div>
+      </div>
+      <div class="stack-group">
+        <h3>analytics &amp; bi</h3>
+        <div class="tags">
+          <span>Power BI</span><span>Tableau</span><span>Statistical Analysis</span><span>KPI Frameworks</span>
+        </div>
+      </div>
+      <div class="stack-group">
+        <h3>applied ai</h3>
+        <div class="tags">
+          <span>LLM APIs</span><span>LangChain</span><span>RAG</span><span>Prompt Engineering</span><span>TensorFlow</span><span>PyTorch</span>
+        </div>
+      </div>
+      <div class="stack-group">
+        <h3>practices</h3>
+        <div class="tags">
+          <span>Agile / Scrum</span><span>REST API Development</span><span>Query Optimization</span><span>Data Quality &amp; Validation</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ EXPERIENCE ============ -->
+  <section class="section" id="experience">
+    <p class="task-id"><span class="dot dot-static"></span>task_id: run_history</p>
+    <h2 class="section-title">Where I've shipped.</h2>
+
+    <div class="runs">
+
+      <article class="run">
+        <div class="run-head">
+          <div>
+            <h3>Digital Accessibility Student Assistant</h3>
+            <p class="run-org">University of South Dakota — Vermillion, SD</p>
+          </div>
+          <div class="run-meta">
+            <span class="status status-success">success</span>
+            <span class="run-date">Dec 2024 – May 2025, Nov 2025 – Jan 2026</span>
+          </div>
+        </div>
+        <ul class="run-list">
+          <li>Automated extraction, cleaning, transformation, and validation of multi-source datasets, including LMS data, student records, and audit results, with SQL and Python, for centralized analysis.</li>
+          <li>Automated institutional reporting workflows and built Power BI dashboards for performance and compliance metrics, cutting report prep from 5 days to 2 hours.</li>
+          <li>Built KPI tracking frameworks aligned to organizational goals, improving decision-making accuracy by 35%.</li>
+          <li>Ran statistical analysis on student engagement trends to guide data-driven allocation of support resources.</li>
+          <li>Delivered analytics reports and dashboards on a Scrum cadence, including sprint planning, backlog grooming, and daily stand-ups.</li>
+        </ul>
+      </article>
+
+      <article class="run">
+        <div class="run-head">
+          <div>
+            <h3>Associate IT Consultant — Data Engineering</h3>
+            <p class="run-org">ITC Infotech India Limited — Bengaluru, IN</p>
+          </div>
+          <div class="run-meta">
+            <span class="status status-success">success</span>
+            <span class="run-date">Jan 2022 — Aug 2024</span>
+          </div>
+        </div>
+        <ul class="run-list">
+          <li>Engineered end-to-end ETL pipelines in Python and SQL, integrating large-scale structured datasets across enterprise source systems for downstream reporting.</li>
+          <li>Optimized SQL queries and stored procedures through indexing, query rewriting, and execution-plan analysis, reducing report generation time across production BI workflows.</li>
+          <li>Integrated Kafka-based messaging into backend data workflows for event-driven movement between enterprise services, improving decoupling and reliability.</li>
+          <li>Implemented schema consistency checks and pipeline-level monitoring, reducing failures in data-dependent reporting.</li>
+          <li>Automated recurring data validation and reconciliation with Python, removing manual effort and recurring discrepancies.</li>
+          <li>Supported migration of enterprise datasets into Azure Databricks, enabling large-scale Spark processing for downstream teams.</li>
+          <li>Built and maintained REST API integrations connecting middleware and backend services for internal and third-party data exchange.</li>
+          <li>Delivered Tableau and Power BI reports translating pipeline output into visual summaries for business stakeholders.</li>
+        </ul>
+      </article>
+
+      <article class="run">
+        <div class="run-head">
+          <div>
+            <h3>Technical Intern — Data &amp; Monitoring Systems</h3>
+            <p class="run-org">Rakuten India Enterprise — Bengaluru, IN</p>
+          </div>
+          <div class="run-meta">
+            <span class="status status-success">success</span>
+            <span class="run-date">Aug 2020 — Feb 2021</span>
+          </div>
+        </div>
+        <ul class="run-list">
+          <li>Extracted and prepared datasets from internal databases to feed Grafana dashboards and operational reports.</li>
+          <li>Wrote SQL for ad-hoc pulls, pipeline output validation, and exploratory analysis supporting team reporting.</li>
+          <li>Built and maintained Grafana dashboards connected to Prometheus metrics for real-time service health visibility.</li>
+          <li>Supported monitoring and alerting setup with Prometheus, aiding early detection of infrastructure anomalies.</li>
+          <li>Wrote Selenium automation for functional testing of web-facing enterprise applications, cutting manual regression effort.</li>
+        </ul>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- ============ PROJECTS ============ -->
+  <section class="section" id="projects">
+    <p class="task-id"><span class="dot dot-static"></span>task_id: featured_pipelines</p>
+    <h2 class="section-title">Things I've built.</h2>
+    <p class="section-lede">Systems shaped like production — orchestrated, monitored, and built on real (or realistically sized) data, not toy demos.</p>
+
+    <div class="projects-grid">
+
+      <article class="project project-flagship">
+        <div class="project-top">
+          <span class="project-flag">★ flagship</span>
+          <span class="project-metric">agent-driven <strong class="accent-amber">RCA</strong></span>
+        </div>
+        <h3>DataPulse — Agentic Data Reliability &amp; Operations Platform</h3>
+        <p>An agentic ops layer for data pipelines: streaming infrastructure that can investigate its own failures and propose fixes, with a human still in the loop.</p>
+        <div class="dag-mini" role="img" aria-label="Architecture: Kafka streams data through PySpark processing, orchestrated by Airflow and modeled with dbt, feeding an LLM agent that monitors Prometheus and Grafana for anomalies and recommends root causes.">
+          <div class="dag-mini-track">
+            <div class="dag-mini-node" style="--i:0">
+              <span class="dag-mini-label">kafka</span>
+              <span class="dag-mini-sub">streaming ingest</span>
             </div>
-        </div>
-    </section>
-
-    <!-- Contact Section -->
-    <section id="contact" class="py-16 bg-white">
-        <div class="container mx-auto px-4 text-center">
-            <h2 class="text-3xl font-bold mb-4">SAY HELLO, I AM LOOKING FOR A CHANGE!</h2>
-            <!-- Update the href with your Gmail address -->
-            <a href="mailto:prajwalarunkumar29@gmail.com" class="bg-red-600 text-white px-6 py-3 rounded-full font-semibold hover:bg-red-700 mb-6 inline-block">Get in Touch</a>
-            <div class="flex justify-center space-x-6">
-                <!-- Update the href with your social media links -->
-                <a href="https://github.com/prajwal2k" class="text-red-600 hover:underline">GitHub</a>
-                <!-- <a href="[Your Twitter Link]" class="text-red-600 hover:underline">Twitter</a> -->
-                <a href="https://www.linkedin.com/in/prajwal-arun-kumar-745503176" class="text-red-600 hover:underline">LinkedIn</a>
+            <div class="dag-mini-edge"></div>
+            <div class="dag-mini-node" style="--i:1">
+              <span class="dag-mini-label">pyspark + airflow</span>
+              <span class="dag-mini-sub">process · orchestrate</span>
             </div>
+            <div class="dag-mini-edge"></div>
+            <div class="dag-mini-node dag-mini-node-accent" style="--i:2">
+              <span class="dag-mini-label">dbt + s3 / snowflake</span>
+              <span class="dag-mini-sub">validate · warehouse</span>
+            </div>
+            <div class="dag-mini-edge"></div>
+            <div class="dag-mini-node dag-mini-node-accent-teal" style="--i:3">
+              <span class="dag-mini-label">llm agent</span>
+              <span class="dag-mini-sub">root-cause · remediation</span>
+            </div>
+          </div>
+          <p class="dag-mini-caption">observability via Prometheus / Grafana · human-in-the-loop remediation</p>
         </div>
-    </section>
-
-    <footer class="bg-gray-800 text-white py-6">
-        <div class="container mx-auto text-center">
-            <p>© 2025 Prajwal Arun Kumar. All rights reserved.</p>
+        <ul>
+          <li>Built an agentic data reliability platform on Kafka, PySpark, Airflow, and dbt to ingest, process, orchestrate, and validate streaming data across a production-style pipeline.</li>
+          <li>Developed an AI-powered data engineering agent using LLM tool calling to investigate pipeline failures, analyze logs and data-quality anomalies, generate SQL-based diagnostics, and recommend root causes with human-in-the-loop remediation.</li>
+          <li>Implemented observability and fault-tolerance workflows with Prometheus/Grafana, data-quality checks, failure injection, and automated recovery, integrating AWS S3 and Snowflake for the underlying data lake and analytics workloads.</li>
+        </ul>
+        <div class="tags tags-project">
+          <span>Kafka</span><span>PySpark</span><span>Airflow</span><span>dbt</span><span>LLM Tool Calling</span><span>Prometheus</span><span>Grafana</span><span>Snowflake</span>
         </div>
-    </footer>
+      </article>
 
-    <script src="script.js"></script>
+      <article class="project">
+        <div class="project-top">
+          <span class="project-flag project-flag-muted">pipeline</span>
+          <span class="project-metric">latency <strong class="accent-amber">−60%</strong></span>
+        </div>
+        <h3>Real-Time Data Lakehouse Pipeline on AWS</h3>
+        <p>Streaming + batch lakehouse combining Kafka ingestion with S3 storage, unified analytics, and fault-tolerant orchestration.</p>
+
+        <div class="dag-mini" role="img" aria-label="Architecture: Kafka streams data into an S3 data lake, Spark and PySpark process it in batch and streaming modes, and partitioned Parquet data is queried through Athena, all orchestrated by Airflow.">
+          <div class="dag-mini-track">
+            <div class="dag-mini-node" style="--i:0">
+              <span class="dag-mini-label">kafka</span>
+              <span class="dag-mini-sub">streaming ingest</span>
+            </div>
+            <div class="dag-mini-edge"></div>
+            <div class="dag-mini-node" style="--i:1">
+              <span class="dag-mini-label">S3</span>
+              <span class="dag-mini-sub">data lake</span>
+            </div>
+            <div class="dag-mini-edge"></div>
+            <div class="dag-mini-node dag-mini-node-accent" style="--i:2">
+              <span class="dag-mini-label">spark / pyspark</span>
+              <span class="dag-mini-sub">batch + streaming</span>
+            </div>
+            <div class="dag-mini-edge"></div>
+            <div class="dag-mini-node dag-mini-node-accent-teal" style="--i:3">
+              <span class="dag-mini-label">athena</span>
+              <span class="dag-mini-sub">partitioned Parquet</span>
+            </div>
+          </div>
+          <p class="dag-mini-caption">orchestrated by Airflow · scheduling, monitoring, fault tolerance</p>
+        </div>
+
+        <ul>
+          <li>Kafka-based streaming ingestion into an S3 data lake for scalable processing.</li>
+          <li>Unified batch and real-time analytics over structured and semi-structured data with Spark / PySpark.</li>
+          <li>End-to-end orchestration, scheduling, and monitoring with Apache Airflow.</li>
+          <li>Partitioned Parquet + AWS Athena, cutting query latency by up to 60%.</li>
+        </ul>
+        <div class="tags tags-project">
+          <span>Kafka</span><span>AWS S3</span><span>Spark</span><span>PySpark</span><span>Airflow</span><span>Athena</span>
+        </div>
+      </article>
+
+      <article class="project">
+        <div class="project-top">
+          <span class="project-flag project-flag-muted">applied ai</span>
+          <span class="project-metric">turnaround <strong class="accent-teal">−80%</strong></span>
+        </div>
+        <h3>LLM-Powered Natural Language Query System</h3>
+        <p>Natural-language-to-SQL layer so non-technical users can query production warehouses in plain English, the applied-AI project that sits directly on top of the data stack.</p>
+
+        <div class="dag-mini" role="img" aria-label="Architecture: a plain-English question goes through a LangChain agent with retrieval-augmented schema context, generates SQL that is validated with dry-runs, and executes against BigQuery and PostgreSQL, served through a FastAPI layer.">
+          <div class="dag-mini-track">
+            <div class="dag-mini-node" style="--i:0">
+              <span class="dag-mini-label">user query</span>
+              <span class="dag-mini-sub">plain English</span>
+            </div>
+            <div class="dag-mini-edge"></div>
+            <div class="dag-mini-node dag-mini-node-accent" style="--i:1">
+              <span class="dag-mini-label">langchain agent</span>
+              <span class="dag-mini-sub">RAG over schema</span>
+            </div>
+            <div class="dag-mini-edge"></div>
+            <div class="dag-mini-node" style="--i:2">
+              <span class="dag-mini-label">SQL validation</span>
+              <span class="dag-mini-sub">schema checks · dry-run</span>
+            </div>
+            <div class="dag-mini-edge"></div>
+            <div class="dag-mini-node dag-mini-node-accent-teal" style="--i:3">
+              <span class="dag-mini-label">bigquery / postgres</span>
+              <span class="dag-mini-sub">warehouse</span>
+            </div>
+          </div>
+          <p class="dag-mini-caption">served via FastAPI · async execution, sub-3s median response</p>
+        </div>
+
+        <ul>
+          <li>NL→SQL system on LLM APIs and LangChain over BigQuery and PostgreSQL, cutting ad-hoc request turnaround by 80%.</li>
+          <li>Structured prompt engineering with schema checks and query dry-runs to reduce hallucinated or unsafe queries.</li>
+          <li>Deployed as a FastAPI REST service with async execution, reaching a sub-3-second median response across concurrent sessions.</li>
+          <li>Retrieval-augmented context (schema, column descriptions) improved accuracy on complex multi-join queries by 45%.</li>
+        </ul>
+        <div class="tags tags-project">
+          <span>LangChain</span><span>RAG</span><span>FastAPI</span><span>BigQuery</span><span>PostgreSQL</span>
+        </div>
+      </article>
+
+      <article class="project">
+        <div class="project-top">
+          <span class="project-flag project-flag-muted">pipeline</span>
+        </div>
+        <h3>Cloud-Native Data Lake &amp; Warehouse Pipeline</h3>
+        <p>End-to-end platform processing ~100K e-commerce records, fully defined as code.</p>
+
+        <div class="dag-mini" role="img" aria-label="Architecture: Python and Lambda ingest data into an S3 raw zone, dbt transforms it through staging and mart layers, landing in Snowflake, all orchestrated by Airflow and provisioned with Terraform.">
+          <div class="dag-mini-track">
+            <div class="dag-mini-node" style="--i:0">
+              <span class="dag-mini-label">ingest</span>
+              <span class="dag-mini-sub">Python · Lambda</span>
+            </div>
+            <div class="dag-mini-edge"></div>
+            <div class="dag-mini-node" style="--i:1">
+              <span class="dag-mini-label">S3</span>
+              <span class="dag-mini-sub">raw zone</span>
+            </div>
+            <div class="dag-mini-edge"></div>
+            <div class="dag-mini-node dag-mini-node-accent" style="--i:2">
+              <span class="dag-mini-label">dbt</span>
+              <span class="dag-mini-sub">staging → mart</span>
+            </div>
+            <div class="dag-mini-edge"></div>
+            <div class="dag-mini-node dag-mini-node-accent-teal" style="--i:3">
+              <span class="dag-mini-label">snowflake</span>
+              <span class="dag-mini-sub">warehouse</span>
+            </div>
+          </div>
+          <p class="dag-mini-caption">orchestrated by Airflow · provisioned with Terraform · shipped via GitHub Actions</p>
+        </div>
+
+        <ul>
+          <li>Ingestion and orchestration with Python, Airflow, S3, and Lambda.</li>
+          <li>Analytics-ready dimensional models in Snowflake via dbt, structured into staging and mart layers for sales and customer reporting.</li>
+          <li>AWS and Snowflake infrastructure provisioned with Terraform for repeatable environments.</li>
+          <li>CI/CD via GitHub Actions to automate pipeline testing and deployment.</li>
+        </ul>
+        <div class="tags tags-project">
+          <span>dbt</span><span>Snowflake</span><span>Terraform</span><span>GitHub Actions</span>
+        </div>
+      </article>
+
+      <article class="project">
+        <div class="project-top">
+          <span class="project-flag project-flag-muted">applied ml</span>
+          <span class="project-metric">dice score <strong>0.9352</strong></span>
+        </div>
+        <h3>3D Medical Image Segmentation Pipeline</h3>
+        <p>Data engineering meets deep learning: a preprocessing pipeline for large volumetric MRI data feeding a segmentation model.</p>
+
+        <div class="dag-mini" role="img" aria-label="Architecture: multimodal T1 and T2 MRI volumes from the CirrMRI600+ dataset are preprocessed and augmented, then fed into a 3D U-Net model, producing liver segmentation output.">
+          <div class="dag-mini-track">
+            <div class="dag-mini-node" style="--i:0">
+              <span class="dag-mini-label">MRI volumes</span>
+              <span class="dag-mini-sub">T1 / T2 · CirrMRI600+</span>
+            </div>
+            <div class="dag-mini-edge"></div>
+            <div class="dag-mini-node" style="--i:1">
+              <span class="dag-mini-label">preprocess</span>
+              <span class="dag-mini-sub">clean · augment</span>
+            </div>
+            <div class="dag-mini-edge"></div>
+            <div class="dag-mini-node dag-mini-node-accent" style="--i:2">
+              <span class="dag-mini-label">3D U-Net</span>
+              <span class="dag-mini-sub">PyTorch training</span>
+            </div>
+            <div class="dag-mini-edge"></div>
+            <div class="dag-mini-node dag-mini-node-accent-teal" style="--i:3">
+              <span class="dag-mini-label">segmentation</span>
+              <span class="dag-mini-sub">dice 0.9352</span>
+            </div>
+          </div>
+          <p class="dag-mini-caption">liver segmentation · held-out test set</p>
+        </div>
+
+        <ul>
+          <li>Preprocessing and augmentation pipeline for multimodal (T1/T2) volumetric MRI from the CirrMRI600+ dataset.</li>
+          <li>Trained a 3D U-Net for liver segmentation, reaching a mean Dice score of 0.9352 on held-out test data.</li>
+        </ul>
+        <div class="tags tags-project">
+          <span>PyTorch</span><span>3D U-Net</span><span>Data Pipelines</span>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- ============ CERTIFICATIONS + EDUCATION ============ -->
+  <section class="section" id="certs">
+    <p class="task-id"><span class="dot dot-static"></span>task_id: credentials</p>
+    <h2 class="section-title">Certified on the stack.</h2>
+
+    <div class="creds-grid">
+      <div class="cred-col">
+        <h3>certifications</h3>
+        <a class="cred-card cred-card-link" href="https://credentials.databricks.com/5675e829-d666-403a-aa26-568b02524d68#acc.X8KLtVQj" target="_blank" rel="noopener">
+          <span class="status status-success">verified</span>
+          <p class="cred-name">Databricks Certified Data Engineer Associate</p>
+          <span class="cred-verify">verify credential →</span>
+        </a>
+        <a class="cred-card cred-card-link" href="https://www.credly.com/badges/0185ae5d-c096-45d2-9d5f-10bc683ee07e" target="_blank" rel="noopener">
+          <span class="status status-success">verified</span>
+          <p class="cred-name">AWS Certified Solutions Architect — Associate</p>
+          <span class="cred-verify">verify credential →</span>
+        </a>
+      </div>
+
+      <div class="cred-col">
+        <h3>education</h3>
+        <div class="cred-card cred-card-edu">
+          <p class="cred-name">M.S. in Computer Science</p>
+          <p class="cred-sub">University of South Dakota</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CONTACT ============ -->
+  <section class="section section-contact" id="contact">
+    <p class="task-id"><span class="dot dot-static"></span>task_id: contact</p>
+    <h2 class="section-title">Let's talk data.</h2>
+    <p class="section-lede">
+      Open to data engineering roles — happy to talk pipeline design, cloud data platforms, or
+      where LLMs actually earn their place on top of a warehouse. Email's the fastest way to reach me.
+    </p>
+
+    <div class="contact-links">
+      <a class="contact-link" href="mailto:prajwalarunkumar369@gmail.com">
+        <span class="contact-label">email</span>
+        <span class="contact-value">prajwalarunkumar369@gmail.com</span>
+      </a>
+      <a class="contact-link" href="https://www.linkedin.com/in/prajwal-arun-kumar/" target="_blank" rel="noopener">
+        <span class="contact-label">linkedin</span>
+        <span class="contact-value">/in/prajwal-arun-kumar</span>
+      </a>
+      <a class="contact-link" href="https://github.com/prajwal2k" target="_blank" rel="noopener">
+        <span class="contact-label">github</span>
+        <span class="contact-value">/prajwal2k</span>
+      </a>
+      <a class="contact-link" href="https://drive.google.com/file/d/1u8V4PVaUVQ8u_AQN1yXNKOIYkQsF6Bd3/view?usp=drive_link" target="_blank" rel="noopener">
+        <span class="contact-label">resume</span>
+        <span class="contact-value">view PDF →</span>
+      </a>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <p>// pipeline: prajwal_arun_kumar — run completed successfully · © 2026</p>
+</footer>
+
+<script src="script.js"></script>
 </body>
 </html>
